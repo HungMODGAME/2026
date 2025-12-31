@@ -18,46 +18,63 @@
             transform: translate(-50%, -50%);
             z-index: 9999;
             text-align: center;
-            background: rgba(0, 0, 0, 0.8); /* Nền đen mờ */
-            padding: 40px;
+            background: rgba(0, 0, 0, 0.85); /* Nền đen mờ đậm hơn */
+            padding: 30px 40px;
             border-radius: 30px;
             border: 2px solid #ffcc00;
             box-shadow: 0 0 40px rgba(255, 204, 0, 0.4);
             min-width: 350px;
-            pointer-events: none; /* Để vẫn có thể click pháo hoa bên dưới */
+            pointer-events: none;
         }
-        .timer-title {
+
+        /* Đồng hồ thời gian thực (Mới thêm) */
+        #real-time-clock {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.4rem;
             color: #fff;
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .timer-title {
+            color: #ffcc00;
             font-family: 'Russo One', sans-serif;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ffcc00;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255, 204, 0, 0.3);
+            padding-top: 10px;
         }
+
         .timer-grid {
             display: flex;
             gap: 15px;
             justify-content: center;
         }
+
         .unit-box {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px 10px;
+            padding: 15px 10px;
             border-radius: 15px;
             flex: 1;
         }
+
         .unit-box span {
             display: block;
             font-family: 'Bebas Neue', cursive;
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: #fff;
             line-height: 1;
         }
+
         .unit-label {
             color: #aaa;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: 8px;
             font-weight: bold;
         }
     </style>
@@ -65,7 +82,10 @@
 <body>
 
 <div id="countdown-container">
-    <div class="timer-title" id="main-title">Đếm ngược đến 10:49:56</div>
+    <div id="real-time-clock">00:00:00</div>
+    
+    <div class="timer-title" id="main-title">2026 Sẽ Đến Sau </div>
+    
     <div class="timer-grid">
         <div class="unit-box">
             <span id="days">00</span>
@@ -100,39 +120,35 @@
 
 <script>
     function startCountdown() {
-        // ==========================================
-        // CÁCH SỬA MỐC THỜI GIAN:
-        // ==========================================
-        
-        // Bước 1: Tạo đối tượng thời gian hiện tại
+        // Mốc thời gian đích
         const targetTime = new Date();
-
-        // Bước 2: Thiết lập Giờ, Phút, Giây bạn muốn chuyển trang
-        // Hiện tại đang để là 10 giờ : 39 phút : 56 giây
-        targetTime.setHours(10, 49, 56, 0); 
+        targetTime.setHours(23, 59, 56, 0); 
 
         const timer = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = targetTime.getTime() - now;
+            const now = new Date();
+            const currentTimeMs = now.getTime();
 
-            // Nếu thời gian đã đến hoặc đã qua
+            // 1. CẬP NHẬT ĐỒNG HỒ HIỆN TẠI (MỚI)
+            const h = now.getHours().toString().padStart(2, '0');
+            const m = now.getMinutes().toString().padStart(2, '0');
+            const s = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById("real-time-clock").innerText = `BÂY GIỜ: ${h}:${m}:${s}`;
+
+            // 2. TÍNH TOÁN ĐẾM NGƯỢC
+            const distance = targetTime.getTime() - currentTimeMs;
+
             if (distance <= 0) {
                 clearInterval(timer);
                 document.getElementById("main-title").innerText = "CHÚC MỪNG NĂM MỚI!";
-                
-                // HIỆU ỨNG CHUYỂN TRANG
-                // Đổi "2026.html" thành tên file bạn muốn nhảy tới
                 window.location.href = "index.html"; 
                 return;
             }
 
-            // Tính toán số liệu
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Cập nhật lên màn hình (padStart để luôn có 2 chữ số như 01, 02...)
             document.getElementById("days").innerText = days.toString().padStart(2, '0');
             document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
             document.getElementById("mins").innerText = minutes.toString().padStart(2, '0');
@@ -140,7 +156,6 @@
         }, 1000);
     }
 
-    // Khởi động khi trang đã sẵn sàng
     window.addEventListener('DOMContentLoaded', startCountdown);
 </script>
 
