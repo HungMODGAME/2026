@@ -517,3 +517,52 @@
     -webkit-transition-duration: 0.4s;
             transition-duration: 0.4s;
   }
+
+  /* Cảnh báo xoay màn hình */
+#orientation-warning {
+    display: none; /* Mặc định ẩn */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    color: #fff;
+    z-index: 99999;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Chỉ hiển thị trên thiết bị di động khi ở chế độ dọc (Portrait) */
+@media screen and (max-width: 1024px) and (orientation: portrait) {
+    #orientation-warning {
+        display: flex;
+    }
+    
+    /* Ẩn nội dung chính khi đang hiện cảnh báo để tiết kiệm tài nguyên */
+    body > *:not(#orientation-warning) {
+        display: none !important;
+    }
+}
+
+.warning-content p {
+    font-family: "Russo One", sans-serif;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    line-height: 1.5;
+    color: #ffd700;
+}
+
+.phone-icon {
+    font-size: 50px;
+    animation: rotatePhone 2s infinite ease-in-out;
+}
+
+@keyframes rotatePhone {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+    100% { transform: rotate(0deg); }
+}
