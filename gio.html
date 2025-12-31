@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Happy New Year - Đếm ngược Giao thừa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+        /* Giao diện bộ đếm ngược nổi lên trên pháo hoa */
+        #countdown-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8); /* Nền đen mờ */
+            padding: 40px;
+            border-radius: 30px;
+            border: 2px solid #ffcc00;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.4);
+            min-width: 350px;
+            pointer-events: none; /* Để vẫn có thể click pháo hoa bên dưới */
+        }
+        .timer-title {
+            color: #fff;
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffcc00;
+        }
+        .timer-grid {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .unit-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 10px;
+            border-radius: 15px;
+            flex: 1;
+        }
+        .unit-box span {
+            display: block;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 4rem;
+            color: #fff;
+            line-height: 1;
+        }
+        .unit-label {
+            color: #aaa;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="countdown-container">
+    <div class="timer-title" id="main-title">Đếm ngược đến 10:49:56</div>
+    <div class="timer-grid">
+        <div class="unit-box">
+            <span id="days">00</span>
+            <div class="unit-label">Ngày</div>
+        </div>
+        <div class="unit-box">
+            <span id="hours">00</span>
+            <div class="unit-label">Giờ</div>
+        </div>
+        <div class="unit-box">
+            <span id="mins">00</span>
+            <div class="unit-label">Phút</div>
+        </div>
+        <div class="unit-box">
+            <span id="secs">00</span>
+            <div class="unit-label">Giây</div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stage-container">
+        <div class="canvas-container">
+            <canvas id="trails-canvas"></canvas>
+            <canvas id="main-canvas"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="vl.js"></script>
+<script src="./script.js"></script>
+
+<script>
+    function startCountdown() {
+        // ==========================================
+        // CÁCH SỬA MỐC THỜI GIAN:
+        // ==========================================
+        
+        // Bước 1: Tạo đối tượng thời gian hiện tại
+        const targetTime = new Date();
+
+        // Bước 2: Thiết lập Giờ, Phút, Giây bạn muốn chuyển trang
+        // Hiện tại đang để là 10 giờ : 39 phút : 56 giây
+        targetTime.setHours(10, 49, 56, 0); 
+
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetTime.getTime() - now;
+
+            // Nếu thời gian đã đến hoặc đã qua
+            if (distance <= 0) {
+                clearInterval(timer);
+                document.getElementById("main-title").innerText = "CHÚC MỪNG NĂM MỚI!";
+                
+                // HIỆU ỨNG CHUYỂN TRANG
+                // Đổi "2026.html" thành tên file bạn muốn nhảy tới
+                window.location.href = "index.html"; 
+                return;
+            }
+
+            // Tính toán số liệu
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Cập nhật lên màn hình (padStart để luôn có 2 chữ số như 01, 02...)
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("mins").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("secs").innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    // Khởi động khi trang đã sẵn sàng
+    window.addEventListener('DOMContentLoaded', startCountdown);
+</script>
+
+</body>
+</html>
